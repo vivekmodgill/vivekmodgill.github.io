@@ -15,7 +15,7 @@
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  --container: 920px;
+  --container: 1200px;
 }
 
 * { box-sizing: border-box; }
