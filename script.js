@@ -84,104 +84,86 @@ if (pubList) {
 }
 
 // ---------- Phase-portrait hero animation ----------
-// The dot traces a full Hopf cycle: it spirals out from the fixed point
-// onto a stable limit cycle (growth), sustains that oscillation for a
-// while, then spirals back down to the fixed point as coupling drives
-// the amplitude to zero (amplitude death), rests there, and repeats.
+// The dot follows the amplitude-death trajectory: it spirals inward
+// along the teal path, collapses to the fixed point, pauses, then restarts.
 (function () {
   const cx = 320, cy = 320;
-  const limitRadius = 160;
-  const steps = 200;
+  const startRadius = 230;
+  const steps = 420;
+  const turnsDeath = 5.2;
+  const kDeath = 2.8;
 
-  const turnsGrowth = 3.5;
-  const turnsSustain = 2;
-  const turnsDeath = 2.5;
-  const kGrowth = 3.2;   // how quickly the limit cycle is approached
-  const kDeath = 3.0;    // how quickly the amplitude collapses
+  const deathPath = document.getElementById("spiral-path");
+  const secondaryPath = document.getElementById("spiral-path-death");
+  const dot = document.getElementById("trace-dot");
 
-  function buildPath(thetaStart, thetaEnd, radiusAt) {
+  if (!deathPath || !secondaryPath || !dot) return;
+
+  function buildDeathPath() {
     let d = "";
+
     for (let i = 0; i <= steps; i++) {
       const s = i / steps;
-      const theta = thetaStart + s * (thetaEnd - thetaStart);
-      const r = radiusAt(s);
+      const theta = s * turnsDeath * 2 * Math.PI;
+      const r = startRadius * Math.exp(-kDeath * s);
+
       const x = cx + r * Math.cos(theta);
       const y = cy + r * Math.sin(theta);
-      d += (i === 0 ? "M" : "L") + x.toFixed(2) + "," + y.toFixed(2) + " ";
+
+      d += `${i === 0 ? "M" : "L"}${x.toFixed(2)},${y.toFixed(2)} `;
     }
+
     return d.trim();
   }
 
-  const thetaGrowthEnd = turnsGrowth * 2 * Math.PI;
-  const thetaSustainEnd = thetaGrowthEnd + turnsSustain * 2 * Math.PI;
-  const thetaDeathEnd = thetaSustainEnd + turnsDeath * 2 * Math.PI;
+  deathPath.setAttribute("d", buildDeathPath());
 
-  const growthPath = document.getElementById("spiral-path");
-  const deathPath = document.getElementById("spiral-path-death");
-  const dot = document.getElementById("trace-dot");
-  if (!growthPath || !deathPath || !dot) return;
+  // Hide the second path so the hero focuses on one clean amplitude-death trajectory.
+  secondaryPath.setAttribute("d", "");
+  secondaryPath.style.display = "none";
 
-  growthPath.setAttribute("d", buildPath(0, thetaGrowthEnd, s => limitRadius * (1 - Math.exp(-kGrowth * s))));
-  deathPath.setAttribute("d", buildPath(thetaSustainEnd, thetaDeathEnd, s => limitRadius * Math.exp(-kDeath * s)));
-
-  const growthLength = growthPath.getTotalLength();
-  const deathLength = deathPath.getTotalLength();
-  growthPath.style.strokeDasharray = growthLength;
-  deathPath.style.strokeDasharray = deathLength;
+  const pathLength = deathPath.getTotalLength();
+  deathPath.style.strokeDasharray = pathLength;
+  deathPath.style.strokeDashoffset = pathLength;
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (prefersReduced) {
-    growthPath.style.strokeDashoffset = 0;
-    deathPath.style.strokeDashoffset = deathLength;
-    dot.setAttribute("cx", cx + limitRadius);
+    deathPath.style.strokeDashoffset = 0;
+    dot.setAttribute("cx", cx);
     dot.setAttribute("cy", cy);
     return;
   }
 
-  const durations = { growth: 2400, sustain: 4200, death: 2600, rest: 1100 };
-  const total = durations.growth + durations.sustain + durations.death + durations.rest;
-
+  const duration = 5200;
+  const pause = 900;
+  const total = duration + pause;
   let cycleStart = null;
 
   function frame(now) {
     if (cycleStart === null) cycleStart = now;
+
     const elapsed = (now - cycleStart) % total;
 
-    if (elapsed < durations.growth) {
-      const t = elapsed / durations.growth;
-      const eased = 1 - Math.pow(1 - t, 3);
-      const theta = eased * thetaGrowthEnd;
-      const r = limitRadius * (1 - Math.exp(-kGrowth * eased));
-      dot.setAttribute("cx", (cx + r * Math.cos(theta)).toFixed(2));
-      dot.setAttribute("cy", (cy + r * Math.sin(theta)).toFixed(2));
-      growthPath.style.strokeDashoffset = growthLength * (1 - eased);
-      deathPath.style.strokeDashoffset = deathLength;
+    if (elapsed < duration) {
+      const t = elapsed / duration;
 
-    } else if (elapsed < durations.growth + durations.sustain) {
-      const s = (elapsed - durations.growth) / durations.sustain;
-      const theta = thetaGrowthEnd + s * turnsSustain * 2 * Math.PI;
-      const wobble = 1 + 0.015 * Math.sin(elapsed / 900);
-      dot.setAttribute("cx", (cx + limitRadius * wobble * Math.cos(theta)).toFixed(2));
-      dot.setAttribute("cy", (cy + limitRadius * wobble * Math.sin(theta)).toFixed(2));
-      growthPath.style.strokeDashoffset = 0;
-      deathPath.style.strokeDashoffset = deathLength;
+      // Smooth but still visibly dynamical
+      const eased = 1 - Math.pow(1 - t, 2.2);
 
-    } else if (elapsed < durations.growth + durations.sustain + durations.death) {
-      const u = (elapsed - durations.growth - durations.sustain) / durations.death;
-      const theta = thetaSustainEnd + u * turnsDeath * 2 * Math.PI;
-      const r = limitRadius * Math.exp(-kDeath * u);
-      dot.setAttribute("cx", (cx + r * Math.cos(theta)).toFixed(2));
-      dot.setAttribute("cy", (cy + r * Math.sin(theta)).toFixed(2));
-      growthPath.style.strokeDashoffset = 0;
-      deathPath.style.strokeDashoffset = deathLength * (1 - u);
+      const point = deathPath.getPointAtLength(eased * pathLength);
 
+      dot.setAttribute("cx", point.x.toFixed(2));
+      dot.setAttribute("cy", point.y.toFixed(2));
+
+      // Draw the path as the dot moves
+      deathPath.style.strokeDashoffset = pathLength * (1 - eased);
+      dot.style.opacity = 1;
     } else {
-      // Amplitude death has run its course -- the fixed point is at rest.
       dot.setAttribute("cx", cx);
       dot.setAttribute("cy", cy);
-      growthPath.style.strokeDashoffset = 0;
       deathPath.style.strokeDashoffset = 0;
+      dot.style.opacity = 0.65;
     }
 
     requestAnimationFrame(frame);
