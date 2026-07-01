@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vivek Sharma — Neuroscientist</title>
+<meta name="description" content="Vivek Sharma is a neuroscientist at the Donders Institute studying whole-brain dynamics, criticality, and non-invasive brain stimulation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<nav id="nav">
+  <a href="#top" class="nav-mark">VS</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#research">Research</a>
+    <a href="#publications">Publications</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header id="top" class="hero">
+  <div class="hero-field">
+    <svg id="phase-portrait" viewBox="0 0 640 640" aria-hidden="true">
+      <defs>
+        <radialGradient id="fade" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#E1A340" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#E1A340" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="320" cy="320" r="230" class="orbit-guide"/>
+      <circle cx="320" cy="320" r="160" class="orbit-guide"/>
+      <circle cx="320" cy="320" r="90" class="orbit-guide"/>
+      <path id="spiral-path" class="spiral" d=""/>
+      <circle id="trace-dot" r="4.5" fill="url(#fade)"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="eyebrow">Donders Institute for Brain, Cognition and Behaviour · Radboud University</p>
+    <h1>Vivek Sharma</h1>
+    <p class="tagline">Neuroscientist working at the edge of order and chaos in the brain</p>
+    <p class="hero-sub">I study how large-scale brain dynamics emerge from networks of interacting oscillators, and how non-invasive stimulation can be used to steer them — combining whole-brain computational modelling, EEG/MEG electrophysiology, and transcranial ultrasound.</p>
+    <div class="hero-links">
+      <a href="assets/vsharma_cv.pdf" class="btn btn-primary" download>Download CV</a>
+      <a href="#publications" class="btn btn-ghost">See publications</a>
+    </div>
+    <div class="hero-meta">
+      <span>Nijmegen, Netherlands</span>
+      <span class="dot">·</span>
+      <a href="https://orcid.org/0000-0002-3675-3827" target="_blank" rel="noopener">ORCID 0000-0002-3675-3827</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="about" class="section">
+  <div class="section-head">
+    <span class="section-num">About</span>
+    <h2>A brain is a network of clocks, learning to keep time together</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I am a PhD candidate at the Donders Institute for Brain, Cognition and Behaviour, Radboud University, in the final stages of a doctoral thesis on the nonlinear dynamics of large-scale brain function. My work treats the brain as a network of coupled oscillators poised near a Hopf bifurcation — the mathematical boundary between quiescence and sustained rhythm — and asks how proximity to that boundary shapes cognition, ageing, and recovery from stroke.</p>
+      <p>Modelling and stimulation play different roles in this work. Whole-brain computational models built on Stuart–Landau oscillators let me characterise and understand the dynamics already present in a brain — its distance to criticality, its repertoire of synchronisation patterns. Neuromodulation, by contrast, is not observational: techniques such as transcranial alternating current stimulation and transcranial ultrasound causally perturb those dynamics, letting me test whether the mechanisms the models describe actually govern behaviour, rather than merely correlate with it.</p>
+      <p>Before Nijmegen, I worked on virtual-brain infrastructure at the Institute for Bioengineering of Catalonia in Barcelona and on EEG biomarkers of stroke recovery at the National Brain Research Centre in India. Both roles left me with a lasting interest in translating dynamical-systems theory into tools clinicians and patients can actually use.</p>
+    </div>
+    <aside class="about-facts">
+      <div class="fact">
+        <span class="fact-label">Focus</span>
+        <span class="fact-value">Whole-brain modelling · EEG/MEG · TUS &amp; tACS</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Institution</span>
+        <span class="fact-value">Donders Institute, Radboud University</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Languages</span>
+        <span class="fact-value">English (fluent) · Hindi (native)</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Elsewhere</span>
+        <span class="fact-value fact-links">
+          <a href="https://github.com/vivekmodgill" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://linkedin.com/in/vivek-sharma-2715b6129" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://orcid.org/0000-0002-3675-3827" target="_blank" rel="noopener">ORCID</a>
+        </span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section id="research" class="section">
+  <div class="section-head">
+    <span class="section-num">Research</span>
+    <h2>Three ways of asking the same question</h2>
+  </div>
+  <div class="pillars">
+    <article class="pillar">
+      <span class="pillar-mark">Characterise</span>
+      <h3>Whole-brain modelling</h3>
+      <p>Networks of Stuart–Landau oscillators, tuned near a Hopf bifurcation, reproduce the synchronisation patterns seen in resting and task EEG/MEG. Fitting these models to individual data reveals each brain's distance to criticality — a single dynamical fingerprint that shifts with ageing and after stroke.</p>
+    </article>
+    <article class="pillar">
+      <span class="pillar-mark">Observe</span>
+      <h3>Electrophysiology</h3>
+      <p>EEG and MEG recordings, analysed through spectral and connectivity methods, provide the empirical repertoire that the models must explain — and the biomarkers that make dynamical theory clinically useful, particularly for predicting motor recovery after stroke.</p>
+    </article>
+    <article class="pillar">
+      <span class="pillar-mark">Perturb</span>
+      <h3>Neuromodulation</h3>
+      <p>Transcranial ultrasound and transcranial alternating current stimulation causally intervene on brain dynamics rather than merely describing them. Targeting structures such as the lateral geniculate nucleus lets me test whether shifting a network's position relative to bifurcation actually changes large-scale synchrony, not just whether the two correlate.</p>
+    </article>
+  </div>
+</section>
+
+<section id="publications" class="section">
+  <div class="section-head">
+    <span class="section-num">Publications</span>
+    <h2>Papers &amp; preprints</h2>
+  </div>
+  <ol class="pub-list" id="pub-list"></ol>
+</section>
+
+<section id="experience" class="section">
+  <div class="section-head">
+    <span class="section-num">Experience</span>
+    <h2>Research positions &amp; education</h2>
+  </div>
+  <div class="timeline">
+    <div class="tl-group">
+      <h3 class="tl-heading">Research positions</h3>
+      <div class="tl-item">
+        <span class="tl-years">2022 — Present</span>
+        <div class="tl-body">
+          <span class="tl-role">PhD Candidate</span>
+          <span class="tl-org">Donders Institute for Brain, Cognition and Behaviour, Radboud University · Nijmegen, NL</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-years">2021 — 2022</span>
+        <div class="tl-body">
+          <span class="tl-role">Research Assistant</span>
+          <span class="tl-org">Institute for Bioengineering of Catalonia · Barcelona, ES</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-years">2018 — 2021</span>
+        <div class="tl-body">
+          <span class="tl-role">Project Assistant</span>
+          <span class="tl-org">National Brain Research Centre · Gurugram, IN</span>
+        </div>
+      </div>
+    </div>
+    <div class="tl-group">
+      <h3 class="tl-heading">Education</h3>
+      <div class="tl-item">
+        <span class="tl-years">2016 — 2018</span>
+        <div class="tl-body">
+          <span class="tl-role">M.Sc. Biochemistry</span>
+          <span class="tl-org">Jamia Millia Islamia · New Delhi, IN</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-years">2012 — 2015</span>
+        <div class="tl-body">
+          <span class="tl-role">B.Sc. (Hons) Zoology</span>
+          <span class="tl-org">University of Delhi · New Delhi, IN</span>
+        </div>
+      </div>
+    </div>
+    <div class="tl-group">
+      <h3 class="tl-heading">Teaching &amp; mentoring</h3>
+      <div class="tl-item">
+        <span class="tl-years">2022 — 2026</span>
+        <div class="tl-body">
+          <span class="tl-role">Student Supervision</span>
+          <span class="tl-org">Donders Institute — Master's and Bachelor's thesis students; lab-rotation mentoring</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="tl-years">2021 — 2022</span>
+        <div class="tl-body">
+          <span class="tl-role">Teaching Assistant</span>
+          <span class="tl-org">Neuromatch Academy — computational neuroscience, project-based learning</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="projects-block">
+    <h3 class="tl-heading">EU research projects</h3>
+    <div class="project-row">
+      <span class="project-tag">2022–2026</span>
+      <p><strong>eBRAIN-Health</strong> (Horizon Europe, 101058516) — development of BrainX3, an interactive platform for visualising and exploring multimodal brain data and whole-brain simulations.</p>
+    </div>
+    <div class="project-row">
+      <span class="project-tag">2022–2026</span>
+      <p><strong>AISN</strong> — Artificial Intelligence in Stroke Neurorehabilitation (Horizon Europe, 101057655) — dynamical EEG biomarkers of stroke recovery for predicting motor outcomes.</p>
+    </div>
+    <div class="project-row">
+      <span class="project-tag">2021–2022</span>
+      <p><strong>TVB-Cloud</strong> — The Virtual Brain Cloud (Horizon 2020, 826421) — cloud-based Virtual Research Environment for large-scale brain modelling within the EBRAINS ecosystem.</p>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="section">
+  <div class="section-head">
+    <span class="section-num">Skills</span>
+    <h2>Toolkit</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <h3>Theoretical neuroscience</h3>
+      <p>Dynamical systems · Whole-brain modelling · Neural dynamics</p>
+    </div>
+    <div class="skill-group">
+      <h3>Neurophysiology</h3>
+      <p>EEG / MEG analysis · Spectral analysis · Signal processing</p>
+    </div>
+    <div class="skill-group">
+      <h3>Neuroimaging</h3>
+      <p>MRI processing · Image-guided stimulation planning</p>
+    </div>
+    <div class="skill-group">
+      <h3>Neuromodulation</h3>
+      <p>Transcranial ultrasound stimulation (TUS) · Stimulation protocols</p>
+    </div>
+    <div class="skill-group">
+      <h3>Scientific computing</h3>
+      <p>Python · MATLAB · R · Linux · LaTeX</p>
+    </div>
+  </div>
+
+  <div class="talks-block">
+    <h3 class="tl-heading">Selected conference presentations</h3>
+    <ul class="talk-list">
+      <li><span class="talk-year">2026</span> Ultrasound Stimulation of Lateral Geniculate Nucleus Modulates Large-Scale Neural Synchrony in Humans — OHBM 2026, Bordeaux</li>
+      <li><span class="talk-year">2025</span> Dynamical Models Reveal Distance to Criticality in Ageing Brain Dynamics — Dutch Neuroscience Meeting</li>
+      <li><span class="talk-year">2024</span> Understanding Whole-Brain Network Dynamics through Targeted Stimulation and Generative Modeling — BrainModes Conference</li>
+      <li><span class="talk-year">2023</span> Exploring the Post-Stroke Frequency-Mediated Dynamic Repertoire of Brain Activity — Sion Stroke Recovery Conference</li>
+    </ul>
+  </div>
+</section>
+
+<section id="contact" class="section section-contact">
+  <div class="section-head">
+    <span class="section-num">Contact</span>
+    <h2>Get in touch</h2>
+  </div>
+  <div class="contact-grid">
+    <a class="contact-card" href="mailto:vivekmodgil@proton.me">
+      <span class="contact-label">Email</span>
+      <span class="contact-value">vivekmodgil@proton.me</span>
+    </a>
+    <a class="contact-card" href="https://linkedin.com/in/vivek-sharma-2715b6129" target="_blank" rel="noopener">
+      <span class="contact-label">LinkedIn</span>
+      <span class="contact-value">vivek-sharma-2715b6129</span>
+    </a>
+    <a class="contact-card" href="https://github.com/vivekmodgill" target="_blank" rel="noopener">
+      <span class="contact-label">GitHub</span>
+      <span class="contact-value">@vivekmodgill</span>
+    </a>
+    <a class="contact-card" href="https://orcid.org/0000-0002-3675-3827" target="_blank" rel="noopener">
+      <span class="contact-label">ORCID</span>
+      <span class="contact-value">0000-0002-3675-3827</span>
+    </a>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <span>Vivek Sharma · Nijmegen, Netherlands</span>
+  <span>Built &amp; maintained on GitHub</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
