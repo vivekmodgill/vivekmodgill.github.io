@@ -94,10 +94,9 @@ if (pubList) {
   const kDeath = 2.8;
 
   const deathPath = document.getElementById("spiral-path");
-  const secondaryPath = document.getElementById("spiral-path-death");
   const dot = document.getElementById("trace-dot");
 
-  if (!deathPath || !secondaryPath || !dot) return;
+  if (!deathPath || !dot) return;
 
   function buildDeathPath() {
     let d = "";
@@ -118,10 +117,6 @@ if (pubList) {
 
   deathPath.setAttribute("d", buildDeathPath());
 
-  // Hide the second path so the hero focuses on one clean amplitude-death trajectory.
-  secondaryPath.setAttribute("d", "");
-  secondaryPath.style.display = "none";
-
   const pathLength = deathPath.getTotalLength();
   deathPath.style.strokeDasharray = pathLength;
   deathPath.style.strokeDashoffset = pathLength;
@@ -138,6 +133,7 @@ if (pubList) {
   const duration = 5200;
   const pause = 900;
   const total = duration + pause;
+  const fade = 220; // ms -- softens the jump when the cycle restarts
   let cycleStart = null;
 
   function frame(now) {
@@ -158,12 +154,19 @@ if (pubList) {
 
       // Draw the path as the dot moves
       deathPath.style.strokeDashoffset = pathLength * (1 - eased);
-      dot.style.opacity = 1;
+
+      // Fade the dot in at the start of each cycle, masking the reset jump
+      dot.style.opacity = elapsed < fade ? elapsed / fade : 1;
     } else {
       dot.setAttribute("cx", cx);
       dot.setAttribute("cy", cy);
       deathPath.style.strokeDashoffset = 0;
-      dot.style.opacity = 0.65;
+
+      const paused = elapsed - duration;
+      const fadeStart = pause - fade;
+
+      // Fade the dot back out near the end of the pause, before it teleports
+      dot.style.opacity = paused > fadeStart ? 0.65 * (1 - (paused - fadeStart) / fade) : 0.65;
     }
 
     requestAnimationFrame(frame);
@@ -182,4 +185,27 @@ if (nav) {
       nav.style.background = "linear-gradient(to bottom, rgba(16,19,31,0.85), rgba(16,19,31,0))";
     }
   });
+}
+
+// ---------- Scroll reveal ----------
+// Sections stay fully visible unless this observer confirms it can reveal
+// them again, so a JS failure never leaves content permanently hidden.
+if ("IntersectionObserver" in window) {
+  document.documentElement.classList.add("js-reveal");
+
+  const revealTargets = document.querySelectorAll(".reveal");
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -80px 0px" }
+  );
+
+  revealTargets.forEach(target => observer.observe(target));
 }
