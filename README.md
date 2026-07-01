@@ -1,6 +1,6 @@
 # vivek-sharma.github.io
 
-Personal academic website for Vivek Sharma — Neuroscientist, PhD Candidate at the Donders Institute for Brain, Cognition and Behaviour, Radboud University.
+Personal academic website for Vivek Sharma — Neuroscientist, Postdoctoral Researcher at the Donders Institute for Brain, Cognition and Behaviour, Radboud University.
 
 Plain HTML/CSS/JS. No build step, no dependencies to install.
 

@@ -84,79 +84,110 @@ if (pubList) {
 }
 
 // ---------- Phase-portrait hero animation ----------
-// Draws a trajectory spiralling out from an unstable fixed point at the
-// origin onto a stable limit cycle -- the Hopf bifurcation at the heart
-// of the Stuart-Landau model this research is built on.
+// The dot traces a full Hopf cycle: it spirals out from the fixed point
+// onto a stable limit cycle (growth), sustains that oscillation for a
+// while, then spirals back down to the fixed point as coupling drives
+// the amplitude to zero (amplitude death), rests there, and repeats.
 (function () {
   const cx = 320, cy = 320;
   const limitRadius = 160;
-  const turns = 4.2;
-  const steps = 260;
-  const k = 3.2; // convergence rate
+  const steps = 200;
 
-  let d = "";
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const theta = t * turns * 2 * Math.PI;
-    const r = limitRadius * (1 - Math.exp(-k * t));
-    const x = cx + r * Math.cos(theta);
-    const y = cy + r * Math.sin(theta);
-    d += (i === 0 ? "M" : "L") + x.toFixed(2) + "," + y.toFixed(2) + " ";
+  const turnsGrowth = 3.5;
+  const turnsSustain = 2;
+  const turnsDeath = 2.5;
+  const kGrowth = 3.2;   // how quickly the limit cycle is approached
+  const kDeath = 3.0;    // how quickly the amplitude collapses
+
+  function buildPath(thetaStart, thetaEnd, radiusAt) {
+    let d = "";
+    for (let i = 0; i <= steps; i++) {
+      const s = i / steps;
+      const theta = thetaStart + s * (thetaEnd - thetaStart);
+      const r = radiusAt(s);
+      const x = cx + r * Math.cos(theta);
+      const y = cy + r * Math.sin(theta);
+      d += (i === 0 ? "M" : "L") + x.toFixed(2) + "," + y.toFixed(2) + " ";
+    }
+    return d.trim();
   }
 
-  const path = document.getElementById("spiral-path");
+  const thetaGrowthEnd = turnsGrowth * 2 * Math.PI;
+  const thetaSustainEnd = thetaGrowthEnd + turnsSustain * 2 * Math.PI;
+  const thetaDeathEnd = thetaSustainEnd + turnsDeath * 2 * Math.PI;
+
+  const growthPath = document.getElementById("spiral-path");
+  const deathPath = document.getElementById("spiral-path-death");
   const dot = document.getElementById("trace-dot");
-  if (!path || !dot) return;
+  if (!growthPath || !deathPath || !dot) return;
 
-  path.setAttribute("d", d.trim());
+  growthPath.setAttribute("d", buildPath(0, thetaGrowthEnd, s => limitRadius * (1 - Math.exp(-kGrowth * s))));
+  deathPath.setAttribute("d", buildPath(thetaSustainEnd, thetaDeathEnd, s => limitRadius * Math.exp(-kDeath * s)));
 
-  const length = path.getTotalLength();
-  path.style.strokeDasharray = length;
-  path.style.strokeDashoffset = length;
+  const growthLength = growthPath.getTotalLength();
+  const deathLength = deathPath.getTotalLength();
+  growthPath.style.strokeDasharray = growthLength;
+  deathPath.style.strokeDasharray = deathLength;
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (prefersReduced) {
-    path.style.strokeDashoffset = 0;
+    growthPath.style.strokeDashoffset = 0;
+    deathPath.style.strokeDashoffset = deathLength;
     dot.setAttribute("cx", cx + limitRadius);
     dot.setAttribute("cy", cy);
     return;
   }
 
-  // Draw the spiral in once on load.
-  const drawDuration = 2200;
-  const drawStart = performance.now();
+  const durations = { growth: 2400, sustain: 4200, death: 2600, rest: 1100 };
+  const total = durations.growth + durations.sustain + durations.death + durations.rest;
 
-  function drawSpiral(now) {
-    const elapsed = now - drawStart;
-    const t = Math.min(1, elapsed / drawDuration);
-    const eased = 1 - Math.pow(1 - t, 3);
-    path.style.strokeDashoffset = length * (1 - eased);
-    if (t < 1) {
-      requestAnimationFrame(drawSpiral);
+  let cycleStart = null;
+
+  function frame(now) {
+    if (cycleStart === null) cycleStart = now;
+    const elapsed = (now - cycleStart) % total;
+
+    if (elapsed < durations.growth) {
+      const t = elapsed / durations.growth;
+      const eased = 1 - Math.pow(1 - t, 3);
+      const theta = eased * thetaGrowthEnd;
+      const r = limitRadius * (1 - Math.exp(-kGrowth * eased));
+      dot.setAttribute("cx", (cx + r * Math.cos(theta)).toFixed(2));
+      dot.setAttribute("cy", (cy + r * Math.sin(theta)).toFixed(2));
+      growthPath.style.strokeDashoffset = growthLength * (1 - eased);
+      deathPath.style.strokeDashoffset = deathLength;
+
+    } else if (elapsed < durations.growth + durations.sustain) {
+      const s = (elapsed - durations.growth) / durations.sustain;
+      const theta = thetaGrowthEnd + s * turnsSustain * 2 * Math.PI;
+      const wobble = 1 + 0.015 * Math.sin(elapsed / 900);
+      dot.setAttribute("cx", (cx + limitRadius * wobble * Math.cos(theta)).toFixed(2));
+      dot.setAttribute("cy", (cy + limitRadius * wobble * Math.sin(theta)).toFixed(2));
+      growthPath.style.strokeDashoffset = 0;
+      deathPath.style.strokeDashoffset = deathLength;
+
+    } else if (elapsed < durations.growth + durations.sustain + durations.death) {
+      const u = (elapsed - durations.growth - durations.sustain) / durations.death;
+      const theta = thetaSustainEnd + u * turnsDeath * 2 * Math.PI;
+      const r = limitRadius * Math.exp(-kDeath * u);
+      dot.setAttribute("cx", (cx + r * Math.cos(theta)).toFixed(2));
+      dot.setAttribute("cy", (cy + r * Math.sin(theta)).toFixed(2));
+      growthPath.style.strokeDashoffset = 0;
+      deathPath.style.strokeDashoffset = deathLength * (1 - u);
+
     } else {
-      requestAnimationFrame(orbit);
+      // Amplitude death has run its course -- the fixed point is at rest.
+      dot.setAttribute("cx", cx);
+      dot.setAttribute("cy", cy);
+      growthPath.style.strokeDashoffset = 0;
+      deathPath.style.strokeDashoffset = 0;
     }
+
+    requestAnimationFrame(frame);
   }
 
-  // After the spiral resolves, let the dot loop forever around the
-  // limit cycle -- the sustained oscillation past the bifurcation.
-  const orbitStart = { time: null };
-  const orbitPeriod = 7000;
-
-  function orbit(now) {
-    if (orbitStart.time === null) orbitStart.time = now;
-    const elapsed = now - orbitStart.time;
-    const theta = (elapsed / orbitPeriod) * 2 * Math.PI + turns * 2 * Math.PI;
-    const wobble = 1 + 0.015 * Math.sin(elapsed / 900);
-    const x = cx + limitRadius * wobble * Math.cos(theta);
-    const y = cy + limitRadius * wobble * Math.sin(theta);
-    dot.setAttribute("cx", x.toFixed(2));
-    dot.setAttribute("cy", y.toFixed(2));
-    requestAnimationFrame(orbit);
-  }
-
-  requestAnimationFrame(drawSpiral);
+  requestAnimationFrame(frame);
 })();
 
 // ---------- Nav background on scroll ----------
