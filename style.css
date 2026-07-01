@@ -338,6 +338,7 @@ main { position: relative; z-index: 2; }
   font-weight: 500;
   font-size: 21px;
   margin: 0 0 12px;
+  white-space: nowrap;
 }
 
 .pillar p {
