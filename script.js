@@ -135,9 +135,17 @@ if (pubList) {
   const total = duration + pause;
   const fade = 220; // ms -- softens the jump when the cycle restarts
   let cycleStart = null;
+  let lastNow = null;
 
   function frame(now) {
-    if (cycleStart === null) cycleStart = now;
+    // A browser can throttle or fully pause requestAnimationFrame while the
+    // tab is hidden/backgrounded. Without this guard, resuming would jump to
+    // an arbitrary point in the cycle -- sometimes landing mid-fade, making
+    // the line and dot look like they vanished. Restart cleanly instead.
+    if (cycleStart === null || (lastNow !== null && now - lastNow > 500)) {
+      cycleStart = now;
+    }
+    lastNow = now;
 
     const elapsed = (now - cycleStart) % total;
 

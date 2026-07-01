@@ -105,10 +105,10 @@ a { color: inherit; text-decoration: none; }
 .hero-field {
   position: absolute;
   top: 50%;
-  right: -6%;
+  right: 2%;
   transform: translateY(-50%);
-  width: min(58vw, 640px);
-  height: min(58vw, 640px);
+  width: min(66vw, 760px);
+  height: min(66vw, 760px);
   opacity: 0.9;
 }
 
@@ -219,6 +219,8 @@ main { position: relative; z-index: 2; }
   padding: 100px 40px;
   border-top: 1px solid var(--line);
 }
+
+.section-wide { max-width: 1320px; }
 
 @media (max-width: 700px) {
   .section { padding: 70px 22px; }
