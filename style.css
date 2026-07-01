@@ -552,6 +552,25 @@ main { position: relative; z-index: 2; }
 .contact-value { font-size: 15px; color: var(--ink); }
 .contact-card:hover .contact-value { color: var(--gold); }
 
+/* ---------- Typography ---------- */
+
+/* Justify all body text */
+.hero-sub,
+.about-text p,
+.pillar p,
+.pub-title,
+.pub-authors,
+.pub-venue,
+.tl-org,
+.project-row p,
+.skill-group p,
+.talk-list li,
+.contact-value {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+}
+
 /* ---------- Footer ---------- */
 .site-footer {
   max-width: var(--container);
